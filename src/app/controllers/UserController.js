@@ -17,7 +17,7 @@ class UserController {
     await User.create({
       name,
       email,
-      password_hash: password
+      password: password
     })
 
     return response.status(201).send()
