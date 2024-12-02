@@ -23,6 +23,9 @@ class UserController {
     return response.status(201).send()
 
   }
+
+  async update(request, response) {
+  }
 }
 
 export default new UserController()
