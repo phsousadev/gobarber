@@ -43,12 +43,9 @@ class UserController {
         message: "Unable to update user"
       })
 
-    const passwordEncrypt = await bcrypt.hash(password, 8)
+    // const passwordEncrypt = await bcrypt.hash(password, 8)
 
-    const { id, name, provider } = await user.update({
-      ...user,
-      password_hash: passwordEncrypt
-    })
+    const { id, name, provider } = await user.update(request.body)
 
     return response.status(200).json({
       id,
