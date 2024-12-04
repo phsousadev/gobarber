@@ -26,40 +26,36 @@ class UserController {
   }
 
   async update(request, response) {
-    const { name, old_password, new_password } = request.body
+    const { old_password, email, password } = request.body
 
-    const user = await User.findOne({
-      where: {
-        id: request.userId
-      }
-    })
+    const user = await User.findByPk(request.userId)
 
-    if (old_password && new_password) {
-      const oldPasswordIsValid = await user.checkPassword(old_password)
+    if (email !== user.email) {
+      const emailAlreadyExists = await User.findOne({ where: { email } })
 
-      if (oldPasswordIsValid) {
-        const passwordEncrypt = await bcrypt.hash(new_password, 8)
-
-        await user.update({
-          name,
-          password_hash: passwordEncrypt
-        })
-
-        await user.save()
-
-        return response.status(200).send()
-      }
-
-      return response.status(401).json({
-        message: "Unable to update user"
+      if (emailAlreadyExists) return response.status(401).json({
+        message: 'Unable to update email as it already exists'
       })
     }
 
-    await user.update({
-      name,
+    if (old_password && !(await user.checkPassword(old_password)))
+      return response.status(401).json({
+        message: "Unable to update user"
+      })
+
+    const passwordEncrypt = await bcrypt.hash(password, 8)
+
+    const { id, name, provider } = await user.update({
+      ...user,
+      password_hash: passwordEncrypt
     })
 
-    return response.status(200).send()
+    return response.status(200).json({
+      id,
+      name,
+      email,
+      provider
+    })
   }
 }
 
