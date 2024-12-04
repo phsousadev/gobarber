@@ -13,13 +13,13 @@ class SessionController {
       }
     })
 
-    const validPassword = await user.checkPassword(password)
-
     if (!user) return response.status(401).json({
       message: 'Email or password are invalid'
     })
 
-    if (!await user.checkPassword(password)) response.status(401).json({
+    const validPassword = await user.checkPassword(password)
+
+    if (!validPassword) return response.status(401).json({
       message: 'Email or password are invalid'
     })
 
