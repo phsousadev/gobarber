@@ -136,3 +136,6 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
+
+#  Tmp files
+tmp/uploads/*
