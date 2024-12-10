@@ -10,6 +10,7 @@ import UserController from "./app/controllers/UserController"
 import SessionController from "./app/controllers/SessionController"
 import FileController from "./app/controllers/FileController"
 import ProviderController from "./app/controllers/ProviderController"
+import AppointmentController from "./app/controllers/AppointmentController"
 
 /**
  * Middlewares
@@ -42,11 +43,17 @@ routes.get('/providers', ProviderController.list)
 routes.post('/sessions', SessionController.store)
 
 /**
- * Alert
+ * ==========> Alert <==========
  * Routes below this function require the user to be authenticated
  */
 routes.use(authMiddleware)
 
+/**
+ * Routes
+ * => Appointments
+ * ==> Authenticated
+ */
+routes.post('/appointments', AppointmentController.store)
 
 /**
  * Routes
