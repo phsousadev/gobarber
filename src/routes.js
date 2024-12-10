@@ -9,6 +9,7 @@ import multerConfig from './config/multer'
 import UserController from "./app/controllers/UserController"
 import SessionController from "./app/controllers/SessionController"
 import FileController from "./app/controllers/FileController"
+import ProviderController from "./app/controllers/ProviderController"
 
 /**
  * Middlewares
@@ -26,6 +27,13 @@ const upload = multer(multerConfig)
  * => Users
  */
 routes.post('/users', UserController.store)
+
+
+/**
+ * Routes
+ * => Providers
+ */
+routes.get('/providers', ProviderController.list)
 
 /**
  * Routes

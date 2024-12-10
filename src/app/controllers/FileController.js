@@ -4,13 +4,12 @@ import User from '../models/User'
 class FileController {
   async store(request, response) {
     const { userId } = request
-    const { path, filename } = request.file
+    const { originalname: name, filename: path } = request.file
 
     const { id: fileId } = await File.create({
-      name: filename,
+      name,
       path
     })
-
 
     await User.update(
       {
