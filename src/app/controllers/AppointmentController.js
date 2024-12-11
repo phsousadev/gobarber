@@ -9,6 +9,8 @@ import File from '../models/File'
 
 import Notification from '../schemas/Notification'
 
+import Mail from '../../lib/Mail'
+
 class AppointmentController {
   async store(request, response) {
 
@@ -133,7 +135,18 @@ class AppointmentController {
   }
 
   async delete(request, response) {
-    const appointment = await Appointment.findByPk(request.params.id)
+    const appointment = await Appointment.findByPk(
+      request.params.id,
+      {
+        include: [
+          {
+            model: User,
+            as: 'provider',
+            attributes: ['name', 'email']
+          }
+        ]
+      }
+    )
 
     if (appointment.user_id !== request.userId) return response.status(401).json({
       message: "You don't have permission to cancel this appointment"
@@ -150,6 +163,12 @@ class AppointmentController {
     appointment.canceled_at = new Date()
 
     await appointment.save()
+
+    await Mail.sendMail({
+      to: `${appointment.provider.name} <${appointment.provider.email}>`,
+      subject: 'Agendamento cancelado',
+      text: 'Você tem um novo cancelamento'
+    })
 
     return response.status(204).json(appointment)
   }
