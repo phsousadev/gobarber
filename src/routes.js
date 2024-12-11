@@ -12,6 +12,7 @@ import FileController from "./app/controllers/FileController"
 import ProviderController from "./app/controllers/ProviderController"
 import AppointmentController from "./app/controllers/AppointmentController"
 import SchedulesController from './app/controllers/ScheduleController'
+import NotificationController from './app/controllers/NotificationController'
 
 /**
  * Middlewares
@@ -77,5 +78,12 @@ routes.put('/users', UserController.update)
  * ==> Authenticated
  */
 routes.post('/files', upload.single('file'), FileController.store)
+
+/**
+ * Routes
+ * => Notifications
+ * ==> Authenticated
+ */
+routes.get('/notifications', NotificationController.list)
 
 export default routes
