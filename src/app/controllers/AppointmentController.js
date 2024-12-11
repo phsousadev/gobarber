@@ -1,4 +1,4 @@
-import { startOfHour, parseISO, isBefore } from 'date-fns'
+import { startOfHour, parseISO, isBefore, subHours } from 'date-fns'
 
 import * as Yup from 'yup'
 
@@ -103,6 +103,28 @@ class AppointmentController {
     return response.status(200).json({
       appointments
     })
+  }
+
+  async delete(request, response) {
+    const appointment = await Appointment.findByPk(request.params.id)
+
+    if (appointment.user_id !== request.userId) return response.status(401).json({
+      message: "You don't have permission to cancel this appointment"
+    })
+
+    const dateWithSub = subHours(appointment.date, 2)
+
+    if (isBefore(dateWithSub, new Date())) {
+      return response.status(401).json({
+        message: 'You can only cancel appointments 2 hours in advance'
+      })
+    }
+
+    appointment.canceled_at = new Date()
+
+    await appointment.save()
+
+    return response.status(204).json(appointment)
   }
 }
 

@@ -63,6 +63,7 @@ routes.get('/schedules', SchedulesController.list)
  */
 routes.post('/appointments', AppointmentController.store)
 routes.get('/appointments', AppointmentController.list)
+routes.delete('/appointments/:id', AppointmentController.delete)
 
 /**
  * Routes
