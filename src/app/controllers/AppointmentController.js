@@ -23,6 +23,11 @@ class AppointmentController {
 
     const { provider_id, date } = request.body
 
+
+    if (Number(provider_id) === request.userId) return response.status(401).json({
+      message: 'You cannot create a schedule for yourself'
+    })
+
     /**
      * Check if provider_id is a provider
      */
