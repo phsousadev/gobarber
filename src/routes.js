@@ -75,6 +75,7 @@ routes.put('/users', UserController.update)
 /**
  * Routes
  * => Files
+ * ==> Authenticated
  */
 routes.post('/files', upload.single('file'), FileController.store)
 
