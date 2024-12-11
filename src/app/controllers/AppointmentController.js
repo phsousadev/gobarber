@@ -73,6 +73,7 @@ class AppointmentController {
 
   async list(request, response) {
     const { userId } = request
+    const { page = 1 } = request.query
 
     const appointments = await Appointment.findAll({
       where: {
@@ -81,6 +82,8 @@ class AppointmentController {
       },
       attributes: ['id', 'date'],
       order: ['date'],
+      limit: 20,
+      offset: (page - 1) * 20,
       include: [
         {
           model: User,
