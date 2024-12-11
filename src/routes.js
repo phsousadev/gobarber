@@ -85,5 +85,6 @@ routes.post('/files', upload.single('file'), FileController.store)
  * ==> Authenticated
  */
 routes.get('/notifications', NotificationController.list)
+routes.put('/notifications/:id', NotificationController.update)
 
 export default routes
