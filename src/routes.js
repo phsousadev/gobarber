@@ -1,5 +1,8 @@
 import { Router } from "express"
 
+/**
+ * Configs
+ */
 import multer from 'multer'
 import multerConfig from './config/multer'
 
@@ -13,6 +16,7 @@ import ProviderController from "./app/controllers/ProviderController"
 import AppointmentController from "./app/controllers/AppointmentController"
 import SchedulesController from './app/controllers/ScheduleController'
 import NotificationController from './app/controllers/NotificationController'
+import AvailableController from "./app/controllers/AvailableController"
 
 /**
  * Middlewares
@@ -36,6 +40,7 @@ routes.post('/users', UserController.store)
  * => Providers
  */
 routes.get('/providers', ProviderController.list)
+routes.get('/providers/:providerId/available', AvailableController.list)
 
 /**
  * Routes
