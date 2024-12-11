@@ -1,10 +1,13 @@
-import { startOfHour, parseISO, isBefore, subHours } from 'date-fns'
+import { startOfHour, parseISO, isBefore, subHours, format } from 'date-fns'
+import { pt } from 'date-fns/locale'
 
 import * as Yup from 'yup'
 
 import Appointment from '../models/Appointments'
 import User from '../models/User'
 import File from '../models/File'
+
+import Notification from '../schemas/Notification'
 
 class AppointmentController {
   async store(request, response) {
@@ -19,7 +22,6 @@ class AppointmentController {
     })
 
     const { provider_id, date } = request.body
-    const { userId } = request
 
     /**
      * Check if provider_id is a provider
@@ -61,9 +63,30 @@ class AppointmentController {
     })
 
     const appointment = await Appointment.create({
-      user_id: userId,
+      user_id: request.userId,
       provider_id,
       date: hourStart
+    })
+
+    /**
+     * Notify the service provider
+     */
+
+    const user = await User.findByPk(request.userId)
+
+    const formattedDate = format(
+      hourStart,
+      "'dia' dd 'de' MMMM', às' H:mm'h'",
+      {
+        locale: pt
+      }
+    )
+
+    await Notification.create({
+      content: `Novo agendamento de ${user.name} para o ${formattedDate}`,
+      user: provider_id
+    }).catch((err) => {
+      console.log(err)
     })
 
     return response.status(201).json({
@@ -72,12 +95,11 @@ class AppointmentController {
   }
 
   async list(request, response) {
-    const { userId } = request
     const { page = 1 } = request.query
 
     const appointments = await Appointment.findAll({
       where: {
-        user_id: userId,
+        user_id: request.userId,
         canceled_at: null
       },
       attributes: ['id', 'date'],
