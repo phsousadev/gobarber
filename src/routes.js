@@ -11,6 +11,7 @@ import SessionController from "./app/controllers/SessionController"
 import FileController from "./app/controllers/FileController"
 import ProviderController from "./app/controllers/ProviderController"
 import AppointmentController from "./app/controllers/AppointmentController"
+import SchedulesController from './app/controllers/ScheduleController'
 
 /**
  * Middlewares
@@ -47,6 +48,13 @@ routes.post('/sessions', SessionController.store)
  * Routes below this function require the user to be authenticated
  */
 routes.use(authMiddleware)
+
+/**
+ * Routes
+ * => Schedules
+ * ==> Authenticated
+ */
+routes.get('/schedules', SchedulesController.list)
 
 /**
  * Routes
