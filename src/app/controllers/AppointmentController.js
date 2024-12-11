@@ -1,7 +1,10 @@
-import * as Yup from 'yup'
 import { startOfHour, parseISO, isBefore } from 'date-fns'
+
+import * as Yup from 'yup'
+
 import Appointment from '../models/Appointments'
 import User from '../models/User'
+import File from '../models/File'
 
 class AppointmentController {
   async store(request, response) {
@@ -65,6 +68,37 @@ class AppointmentController {
 
     return response.status(201).json({
       appointment
+    })
+  }
+
+  async list(request, response) {
+    const { userId } = request
+
+    const appointments = await Appointment.findAll({
+      where: {
+        user_id: userId,
+        canceled_at: null
+      },
+      attributes: ['id', 'date'],
+      order: ['date'],
+      include: [
+        {
+          model: User,
+          as: 'provider',
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'url', 'path']
+            }
+          ]
+        }
+      ]
+    })
+
+    return response.status(200).json({
+      appointments
     })
   }
 }

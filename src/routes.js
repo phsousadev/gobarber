@@ -54,6 +54,7 @@ routes.use(authMiddleware)
  * ==> Authenticated
  */
 routes.post('/appointments', AppointmentController.store)
+routes.get('/appointments', AppointmentController.list)
 
 /**
  * Routes
