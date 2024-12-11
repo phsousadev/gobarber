@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User'
+import File from '../models/File'
 
 import authConfig from '../../config/auth'
 
@@ -10,7 +11,14 @@ class SessionController {
     const user = await User.findOne({
       where: {
         email: email
-      }
+      },
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['name', 'path', 'url']
+        }
+      ]
     })
 
     if (!user) return response.status(401).json({
@@ -29,7 +37,8 @@ class SessionController {
       user: {
         id,
         name,
-        email
+        email,
+        avatar: user.avatar.url,
       },
       token: jwt.sign({ id }, authConfig.secret, {
         expiresIn: authConfig.expiresIn

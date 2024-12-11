@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import express, { response } from 'express'
 import 'express-async-errors'
 import routes from './routes'
@@ -39,9 +41,15 @@ class App {
 
   exceptionHandler() {
     this.server.use(async (err, request, response, next) => {
-      const errors = await new Youch(err, request).toJSON()
+      if (process.env.NODE_ENV === 'dev') {
+        const errors = await new Youch(err, request).toJSON()
 
-      return response.status(500).json(errors)
+        return response.status(500).json(errors)
+      }
+
+      return response.status(500).json({
+        message: 'Internal server error'
+      })
     })
   }
 }
