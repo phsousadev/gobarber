@@ -30,7 +30,6 @@ const upload = multer(multerConfig)
  */
 routes.post('/users', UserController.store)
 
-
 /**
  * Routes
  * => Providers
