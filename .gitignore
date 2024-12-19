@@ -139,3 +139,6 @@ dist
 
 #  Tmp files
 tmp/uploads/*
+
+# Vs code
+.vscode
